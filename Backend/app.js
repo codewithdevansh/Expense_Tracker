@@ -1,3 +1,7 @@
+const transactionRoutes = require('./routes/transactions');
+// const incomeRoutes = require('./routes/income');
+// const expenseRoutes = require('./routes/expense');
+
 // Load environment variables from .env
 require('dotenv').config();
 
@@ -28,6 +32,11 @@ connectDB();
 // Start a basic Express server (optional)
 const express = require('express');
 const app = express();
+
+// Add middlewares
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 const PORT = process.env.PORT || 3000;
 
 app.get('/', (req, res) => {
@@ -38,7 +47,4 @@ app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
 
-const {readdirSync} = require('fs');
-
-// Routes
-readdirSync('./routes').map((r) => app.use('/api', require(`./routes/${r}`)));
+app.use('/api/v1', transactionRoutes);
