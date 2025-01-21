@@ -1,22 +1,22 @@
-import React from "react";
-import styled, {keyframes} from "styled-components";
-import { useWindow } from "../../utils/useWindow";
+import React from 'react'
+import styled, { keyframes } from 'styled-components'
+import { useWindowSize } from '../../utils/useWindowSize';
 
-function Orb(){
+function Orb() {
 
-    const {width, height} = useWindow()
+    const {width, height} = useWindowSize()
 
     console.log(width, height)
 
     const moveOrb = keyframes`
         0%{
-            transform: translate(0,0);
-            }
+            transform: translate(0, 0);
+        }
         50%{
-             transform: translate(${width}px, ${height}px);
-             }
+            transform: translate(${width}px, ${height/2}px);
+        }
         100%{
-             transform: translate(0,0);
+            transform: translate(0, 0);
         }
     `
 
@@ -29,15 +29,11 @@ function Orb(){
         margin-top: -37vh;
         background: linear-gradient(180deg, #F56692 0%, #F2994A 100%);
         filter: blur(400px);
-        animation: ${moveOrb} 1s alternate linear infinite;
+        animation: ${moveOrb} 15s alternate linear infinite;
     `;
 
-
-
     return (
-      <OrbStyled>
-
-      </OrbStyled>
+        <OrbStyled></OrbStyled>
     )
 }
 
