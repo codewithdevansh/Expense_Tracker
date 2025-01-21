@@ -1,50 +1,25 @@
-const transactionRoutes = require('./routes/transactions');
-// const incomeRoutes = require('./routes/income');
-// const expenseRoutes = require('./routes/expense');
+const express = require('express')
+const cors = require('cors');
+const { db } = require('./db/db');
+const {readdirSync} = require('fs')
+const app = express()
 
-// Load environment variables from .env
-require('dotenv').config();
+require('dotenv').config()
 
-// Import Mongoose
-const mongoose = require('mongoose');
+const PORT = process.env.PORT
 
-// Function to connect to the database
-const connectDB = async () => {
-    try {
-        const uri = "mongodb+srv://sahudevansh02:am4ysjsZrl1FHigz@cluster0.jbh3n.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"; // Load MONGO_URI from .env
-        if (!uri) {
-            throw new Error('MONGO_URI is not defined in the .env file');
-        }
-        await mongoose.connect(uri, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        });
-        console.log('MongoDB connected successfully');
-    } catch (error) {
-        console.error('Database connection error:', error.message);
-        process.exit(1); // Exit process with failure
-    }
-};
+//middlewares
+app.use(express.json())
+app.use(cors())
 
-// Connect to the database
-connectDB();
+//routes
+readdirSync('./routes').map((route) => app.use('/api/v1', require('./routes/' + route)))
 
-// Start a basic Express server (optional)
-const express = require('express');
-const app = express();
+const server = () => {
+    db()
+    app.listen(PORT, () => {
+        console.log('listening to port:', PORT)
+    })
+}
 
-// Add middlewares
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-const PORT = process.env.PORT || 3000;
-
-app.get('/', (req, res) => {
-    res.send('Server is running and database is connected!');
-});
-
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-});
-
-app.use('/api/v1', transactionRoutes);
+server()
